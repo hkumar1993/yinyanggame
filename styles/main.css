@@ -8,8 +8,6 @@ body {
 }
 
 #game-container {
-    height: 600px;
-    width: 600px;
     background: rgb(182, 182, 182);
     margin: auto;
 }

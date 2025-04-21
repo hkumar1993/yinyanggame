@@ -1,4 +1,5 @@
 import YinYang from './yinyang.js'
+import Pickups from './pickups.js';
 
 export default class Game {
     constructor() {
@@ -7,7 +8,16 @@ export default class Game {
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
         this.yinYang = new YinYang(this.centerX, this.centerY, 100);
+        this.orbs = [];
+        setInterval(() => this.spawnOrb(), 1000);
         this.loop();
+    }
+
+    spawnOrb() {
+        if (this.orbs.length > 10) {
+            return;
+        }
+        this.orbs.push(new Pickups(0, 0));
     }
 
     update() {
@@ -17,6 +27,7 @@ export default class Game {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.yinYang.draw(this.ctx);
+        this.orbs.forEach((orb) => orb.draw(this.ctx));
     }
 
     loop() {
