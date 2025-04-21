@@ -1,3 +1,5 @@
+import eventBus from "./eventbus.js";
+
 const ROTATIONS = Object.freeze({
     LEFT: 'left',
     RIGHT: 'right',
@@ -26,27 +28,22 @@ export default class YinYang {
     }
 
     bindEvents() {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                this.rotation = ROTATIONS.LEFT;
-            }
-            if (e.key === 'ArrowRight') {
-                this.rotation = ROTATIONS.RIGHT;
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            if (
-                e.key === 'ArrowLeft' &&
-                this.rotation === ROTATIONS.LEFT) {
+        eventBus.subscribe('LEFT_KEYDOWN', () => {
+            this.rotation = ROTATIONS.LEFT;
+        })
+        eventBus.subscribe('RIGHT_KEYDOWN', () => {
+            this.rotation = ROTATIONS.RIGHT;
+        })
+        eventBus.subscribe('LEFT_KEYUP', () => {
+            if (this.rotation === ROTATIONS.LEFT) {
                 this.rotation = ROTATIONS.NONE;
             }
-            if (
-                e.key === 'ArrowRight' &&
-                this.rotation === ROTATIONS.RIGHT) {
+        })
+        eventBus.subscribe('RIGHT_KEYUP', () => {
+            if (this.rotation === ROTATIONS.RIGHT) {
                 this.rotation = ROTATIONS.NONE;
             }
-        });
+        })
     }
 
     rotate(direction, amount) {
@@ -100,7 +97,7 @@ export default class YinYang {
         const r = this.radius;
         const innerCircleRadius = Math.min(
             2*r, 
-            r / 8 + this.distributions.inner[color]);
+            r / 8 + this.distributions[color]);
         ctx.beginPath();
         ctx.arc(0, -r / 2, innerCircleRadius, 0, Math.PI * 2);
         ctx.fillStyle = color;

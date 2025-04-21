@@ -1,0 +1,30 @@
+class EventBus {
+    constructor() {
+        this.eventObject = {};
+        this.callbackId = 0;
+    }
+
+    publish(eventName) {
+        const callbackObject = this.eventObject[eventName];
+
+        if (!callbackObject) {
+            return console.warn(eventName + " not found!");
+        }
+
+        for (let id in callbackObject) {
+            callbackObject[id]();
+        }
+    }
+
+    subscribe(eventName, callback) {
+        if (!this.eventObject[eventName]) {
+            this.eventObject[eventName] = {};
+        }
+
+        const id = this.callbackId++;
+        this.eventObject[eventName][id] = callback;
+    }
+}
+
+const eventBus = new EventBus();
+export default eventBus;
