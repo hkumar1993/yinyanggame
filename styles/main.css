@@ -8,6 +8,7 @@ body {
 }
 
 #game-container {
-    background: rgb(182, 182, 182);
+    /* background: rgb(182, 182, 182); */
+    background: red;
     margin: auto;
 }

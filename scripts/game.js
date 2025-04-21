@@ -8,8 +8,8 @@ export default class Game {
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
         this.yinYang = new YinYang(this.centerX, this.centerY, 100);
+        console.log(this.yinYang);
         this.orbs = [];
-        setInterval(() => this.spawnOrb(), 1000);
         this.loop();
     }
 

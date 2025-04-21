@@ -2,7 +2,14 @@ const ROTATIONS = Object.freeze({
     LEFT: 'left',
     RIGHT: 'right',
     NONE: 'none',
-})
+});
+
+const COLOR = Object.freeze({
+    WHITE: 'white',
+    BLACK: 'black',
+});
+
+const DEFAULT_DISTRIBUTION = 50;
 
 export default class YinYang {
     constructor(centerX, centerY, radius) {
@@ -11,7 +18,10 @@ export default class YinYang {
         this.radius = radius;
         this.angle = 0;
         this.rotation = ROTATIONS.NONE
-
+        this.distributions = {
+            [COLOR.WHITE]: 0,
+            [COLOR.BLACK]: 0,
+        }
         this.bindEvents();
     }
 
@@ -55,36 +65,56 @@ export default class YinYang {
         ctx.translate(this.centerX, this.centerY);
         ctx.rotate(this.angle);
 
-        ctx.beginPath();
-        ctx.arc(0, 0, r, Math.PI * 0.5, Math.PI * 1.5);
-        ctx.fillStyle = 'white';
-        ctx.fill();
+        this.drawCover(ctx)
+        this.drawHalf(ctx, COLOR.BLACK);
+        ctx.rotate(Math.PI);
+        this.drawHalf(ctx, COLOR.WHITE);
+        ctx.restore();
+    }
 
-        ctx.beginPath();
-        ctx.arc(0, 0, r, Math.PI * 1.5, Math.PI * 2.5);
-        ctx.fillStyle = 'black';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(0, -r / 2, r / 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'black';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(0, r / 2, r / 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
-        ctx.fill();
+    drawHalf(ctx, color) {
+        const r = this.radius;
+        const rmod = 5;
+        const oppositeColor = 
+            color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        ctx.save();
+        const halfPath = new Path2D();
+        halfPath.moveTo(0, 0);
+        halfPath.arc(0, 0, (r), Math.PI * 1.5, Math.PI * 2.5);
+        halfPath.arc(0, (r) / 2, (r) / 2, Math.PI * 2.5, Math.PI * 1.5, true);
+        halfPath.arc(0, -(r) / 2, (r) / 2, Math.PI * 2.5, Math.PI * 1.5);
+        halfPath.closePath();
+        ctx.clip(halfPath);
         
         ctx.beginPath();
-        ctx.arc(0, -r / 2, r / 8, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = color;
+        ctx.arc(0,0,r + 2, 0, Math.PI * 2);
         ctx.fill();
+        
 
+        this.drawInnerCircle(ctx, oppositeColor);
+        ctx.restore()
+    }
+
+    drawInnerCircle(ctx, color) {
+        const r = this.radius;
+        const innerCircleRadius = Math.min(
+            2*r, 
+            r / 8 + this.distributions.inner[color]);
         ctx.beginPath();
-        ctx.arc(0, r / 2, r / 8, 0, Math.PI * 2);
-        ctx.fillStyle = 'black';
+        ctx.arc(0, -r / 2, innerCircleRadius, 0, Math.PI * 2);
+        ctx.fillStyle = color;
         ctx.fill();
+    }
 
-        ctx.restore();
+    increaseDot(color, value) {
+        this.distributions[color] = this.distributions[color] + value;
+    }
+
+    drawCover(ctx) {
+        const r = this.radius;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.clip();
     }
 }
