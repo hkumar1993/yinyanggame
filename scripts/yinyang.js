@@ -44,6 +44,16 @@ export default class YinYang {
                 this.rotation = ROTATIONS.NONE;
             }
         })
+
+        eventBus.subscribe('PICKUP', (id, x, y, color) => {
+            const side = this.getSide(x, y);
+            if (side === color) {
+                // increase score
+            } else {
+                // increase dot
+                this.increaseDot(color, 2);
+            }
+        })
     }
 
     rotate(direction, amount) {
@@ -53,6 +63,7 @@ export default class YinYang {
         if (direction === ROTATIONS.RIGHT) {
             this.angle += amount;
         }
+        this.angle = this.angle % (Math.PI * 2);
     }
 
     draw(ctx) {
@@ -113,5 +124,19 @@ export default class YinYang {
         ctx.beginPath();
         ctx.arc(0, 0, r, 0, Math.PI * 2);
         ctx.clip();
+    }
+
+    getSide(x, y) {
+        // Translate point to center
+        let dx = x - this.centerX;
+        let dy = y - this.centerY;
+
+        // Rotate point by negative angle
+        const sin = Math.sin(-this.angle);
+        const cos = Math.cos(-this.angle);
+        const xRot = dx * cos - dy * sin;
+
+        // left side is white, right side is black
+        return xRot < 0 ? COLOR.WHITE : COLOR.BLACK;
     }
 }

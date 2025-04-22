@@ -4,7 +4,7 @@ class EventBus {
         this.callbackId = 0;
     }
 
-    publish(eventName) {
+    publish(eventName, ...args) {
         const callbackObject = this.eventObject[eventName];
 
         if (!callbackObject) {
@@ -12,7 +12,7 @@ class EventBus {
         }
 
         for (let id in callbackObject) {
-            callbackObject[id]();
+            callbackObject[id](...args);
         }
     }
 
