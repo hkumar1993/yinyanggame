@@ -8,7 +8,24 @@
     <script type="module" src="scripts/main.js" defer></script>
 </head>
 <body>
-    <canvas id="game-container" width="600" height="600">
-    </canvas>
+    <div id="ui-container">
+        <div id="score-container">
+            <!-- THIS IS ALL TEMPORARY -->
+             <div>
+                <b>Total Score</b>: <span id="total-score">0</span>
+             </div>
+             <div>
+                <b>Imbalanced Yin</b>: <span id="imbalanced-yin">0</span>
+             </div>
+             <div>
+                <b>Imbalanced Yang</b>: <span id="imbalanced-yang">0</span>
+             </div>
+        </div>
+        <canvas id="game-container" width="600" height="600">
+        </canvas>
+        <div>
+
+        </div>
+    </div>
 </body>
 </html>
