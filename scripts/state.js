@@ -1,7 +1,7 @@
 import { updateScoreValue } from './ui.js';
 
-// Basic GameState object, not doing any redux or things for now
-const state = {
+// Default state
+const INITIAL_STATE = Object.freeze({
     playerLocation: [0, 0],
     playerRadius: 100,
     totalScore: 0,
@@ -9,6 +9,11 @@ const state = {
     currentLevel: 1,
     imbalancedYin: 0,
     imbalancedYang: 0,
+});
+
+// Basic GameState object, not doing any redux or things for now
+const state = {
+    ...INITIAL_STATE,
 };
 
 export default state;
