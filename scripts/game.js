@@ -1,4 +1,5 @@
 import Pickups from './pickups.js';
+import state from './state.js';
 import YinYang from './yinyang.js';
 
 export default class Game {
@@ -7,43 +8,40 @@ export default class Game {
         this.ctx = this.canvas.getContext('2d');
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
-        this.yinYang = new YinYang(this.centerX, this.centerY, 100);
-        console.log(this.yinYang);
-        this.orbs = [];
+        this.yinYang = new YinYang(this.centerX, this.centerY, state.playerRadius);
+        this.orbs = {};
+        this.countOrbs = 0;
+        this.interval = setInterval(() => {
+            this.spawnOrb();
+        }, 500);
+
         this.loop();
-        this.orbSpawnRate = 1000;
-        this.orbSpawnTimer = 0;
     }
 
     spawnOrb() {
-        if (this.orbs.length > 10) {
+        if (this.countOrbs > 100 && this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
             return;
         }
-        this.orbs.push(new Pickups(0, 0));
+        const id = this.countOrbs++;
+        this.orbs[id] = new Pickups(0, 0, id);
     }
 
     update() {
-        // game update logic goes here
-        this.orbSpawnTimer++;
-        if (this.orbSpawnTimer > this.orbSpawnRate) {
-            this.spawnOrb();
-            this.orbSpawnTimer = 0;
-        }
-
         // Check for collisions
-        this.orbs = this.orbs.filter((orb) => {
-            if (this.yinYang.checkCollision(orb)) {
-                // Handle collision - for now just remove the orb
-                return false;
-            }
-            return true;
+        Object.values(this.orbs).forEach((orb) => {
+            if (this.yinYang.checkCollision(orb)) orb.handleCollision();
         });
     }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.yinYang.draw(this.ctx);
-        this.orbs.forEach((orb) => orb.draw(this.ctx));
+        Object.values(this.orbs).forEach((orb) => {
+            if (orb.collided) return;
+            orb.draw(this.ctx);
+        });
     }
 
     loop() {
