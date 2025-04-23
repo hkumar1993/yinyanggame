@@ -1,4 +1,4 @@
-import eventBus from "./eventbus.js";
+import eventBus from './eventbus.js';
 
 const ROTATIONS = Object.freeze({
     LEFT: 'left',
@@ -11,7 +11,7 @@ const COLOR = Object.freeze({
     BLACK: 'black',
 });
 
-const DEFAULT_DISTRIBUTION = 50;
+// const DEFAULT_DISTRIBUTION = 50;
 
 export default class YinYang {
     constructor(centerX, centerY, radius) {
@@ -19,32 +19,31 @@ export default class YinYang {
         this.centerY = centerY;
         this.radius = radius;
         this.angle = 0;
-        this.rotation = ROTATIONS.NONE
+        this.rotation = ROTATIONS.NONE;
         this.distributions = {
             [COLOR.WHITE]: 0,
             [COLOR.BLACK]: 0,
-        }
+        };
         this.bindEvents();
     }
 
     bindEvents() {
         eventBus.subscribe('LEFT_KEYDOWN', () => {
             this.rotation = ROTATIONS.LEFT;
-        })
+        });
         eventBus.subscribe('RIGHT_KEYDOWN', () => {
             this.rotation = ROTATIONS.RIGHT;
-        })
+        });
         eventBus.subscribe('LEFT_KEYUP', () => {
             if (this.rotation === ROTATIONS.LEFT) {
                 this.rotation = ROTATIONS.NONE;
             }
-        })
+        });
         eventBus.subscribe('RIGHT_KEYUP', () => {
             if (this.rotation === ROTATIONS.RIGHT) {
                 this.rotation = ROTATIONS.NONE;
             }
-        })
-
+        });
         eventBus.subscribe('PICKUP', (id, x, y, color) => {
             const side = this.getSide(x, y);
             if (side === color) {
@@ -53,7 +52,7 @@ export default class YinYang {
                 // increase dot
                 this.increaseDot(color, 2);
             }
-        })
+        });
     }
 
     rotate(direction, amount) {
@@ -68,12 +67,11 @@ export default class YinYang {
 
     draw(ctx) {
         this.rotate(this.rotation, 0.05);
-        const r = Math.abs(this.radius);
         ctx.save();
         ctx.translate(this.centerX, this.centerY);
         ctx.rotate(this.angle);
 
-        this.drawCover(ctx)
+        this.drawCover(ctx);
         this.drawHalf(ctx, COLOR.BLACK);
         ctx.rotate(Math.PI);
         this.drawHalf(ctx, COLOR.WHITE);
@@ -82,33 +80,29 @@ export default class YinYang {
 
     drawHalf(ctx, color) {
         const r = this.radius;
-        const rmod = 5;
-        const oppositeColor = 
-            color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        // const rmod = 5;
+        const oppositeColor = color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
         ctx.save();
         const halfPath = new Path2D();
         halfPath.moveTo(0, 0);
-        halfPath.arc(0, 0, (r), Math.PI * 1.5, Math.PI * 2.5);
-        halfPath.arc(0, (r) / 2, (r) / 2, Math.PI * 2.5, Math.PI * 1.5, true);
-        halfPath.arc(0, -(r) / 2, (r) / 2, Math.PI * 2.5, Math.PI * 1.5);
+        halfPath.arc(0, 0, r, Math.PI * 1.5, Math.PI * 2.5);
+        halfPath.arc(0, r / 2, r / 2, Math.PI * 2.5, Math.PI * 1.5, true);
+        halfPath.arc(0, -r / 2, r / 2, Math.PI * 2.5, Math.PI * 1.5);
         halfPath.closePath();
         ctx.clip(halfPath);
-        
+
         ctx.beginPath();
         ctx.fillStyle = color;
-        ctx.arc(0,0,r + 2, 0, Math.PI * 2);
+        ctx.arc(0, 0, r + 2, 0, Math.PI * 2);
         ctx.fill();
-        
 
         this.drawInnerCircle(ctx, oppositeColor);
-        ctx.restore()
+        ctx.restore();
     }
 
     drawInnerCircle(ctx, color) {
         const r = this.radius;
-        const innerCircleRadius = Math.min(
-            2*r, 
-            r / 8 + this.distributions[color]);
+        const innerCircleRadius = Math.min(2 * r, r / 8 + this.distributions[color]);
         ctx.beginPath();
         ctx.arc(0, -r / 2, innerCircleRadius, 0, Math.PI * 2);
         ctx.fillStyle = color;
@@ -124,6 +118,16 @@ export default class YinYang {
         ctx.beginPath();
         ctx.arc(0, 0, r, 0, Math.PI * 2);
         ctx.clip();
+    }
+
+    checkCollision(pickup) {
+        // Calculate distance between centers
+        const dx = this.centerX - pickup.x;
+        const dy = this.centerY - pickup.y;
+        const distance = Math.hypot(dx, dy);
+
+        // Check if distance is less than sum of radii
+        return distance < this.radius + pickup.radius;
     }
 
     getSide(x, y) {

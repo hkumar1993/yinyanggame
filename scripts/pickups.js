@@ -1,8 +1,6 @@
 const DEFAULT_RADIUS = 8;
 const DEFAULT_SPEED = 1;
-import state from './state.js';
 import eventBus from './eventbus.js';
-
 
 /**
  * Items that the player can interact with.
@@ -27,14 +25,10 @@ export default class Pickups {
         const dist = Math.hypot(dx, dy);
         this.x += (dx / dist) * this.speed;
         this.y += (dy / dist) * this.speed;
-        this.checkCollision(dist);
     }
 
-    checkCollision(dist) {
-        // assuming player is in 0,0. if they move we'll need to change this
-        if (dist > state.playerRadius + this.radius) {
-            return;
-        }
+    handleCollision() {
+        if (this.collided) return;
         eventBus.publish('PICKUP', this.id, this.x, this.y, this.color);
         this.collided = true;
     }
