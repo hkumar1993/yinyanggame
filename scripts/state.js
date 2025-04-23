@@ -2,6 +2,29 @@
 const state = {
     playerLocation: [0, 0],
     playerRadius: 100,
+    totalScore: 0,
+    levelScore: [],
+    currentLevel: 1,
+    imbalancedYin: 0,
+    imbalancedYang: 0,
 };
 
 export default state;
+
+export const increaseImbalance = (side, increment) => {
+    if (side === 'black') {
+        state.imbalancedYang = state.imbalancedYang + increment; 
+    } else {
+        state.imbalancedYin = state.imbalancedYin + increment; 
+    }
+}
+
+export const increaseScore = (increment) => {
+    const currentLevel = state.currentLevel;
+    const currentScore = state.levelScore[currentLevel - 1];
+    state.levelScore[currentLevel - 1] = currentScore + increment;
+
+    state.totalScore = state.totalScore + increment;
+}
+
+window.state = state;

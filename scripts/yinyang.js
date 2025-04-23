@@ -1,4 +1,8 @@
 import eventBus from './eventbus.js';
+import {
+    increaseImbalance,
+    increaseScore,
+} from './state.js';
 
 const ROTATIONS = Object.freeze({
     LEFT: 'left',
@@ -47,10 +51,11 @@ export default class YinYang {
         eventBus.subscribe('PICKUP', (id, x, y, color) => {
             const side = this.getSide(x, y);
             if (side === color) {
-                // increase score
+                increaseScore(5);
             } else {
                 // increase dot
                 this.increaseDot(color, 2);
+                increaseImbalance(side, 5)
             }
         });
     }
