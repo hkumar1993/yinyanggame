@@ -25,6 +25,11 @@ body {
 }
 
 #main-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     position: absolute;
     height: 600px;
     width: 600px;
@@ -35,6 +40,10 @@ body {
     }
 
     .buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
         .hidden {
             display: none;
         }
