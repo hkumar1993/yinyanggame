@@ -1,6 +1,6 @@
 import eventBus from './eventbus.js';
 import { increaseImbalance, increaseScore } from './state.js';
-import { EVENTS } from './constants.js';
+import { EVENTS, COLORS } from './constants.js';
 
 //TODO:  move to a helper file if useful?
 const applyLimit = (value, [min, max]) => Math.max(min, Math.min(value, max));
@@ -9,11 +9,6 @@ const ROTATIONS = Object.freeze({
     LEFT: 'left',
     RIGHT: 'right',
     NONE: 'none',
-});
-
-const COLOR = Object.freeze({
-    WHITE: 'white',
-    BLACK: 'black',
 });
 
 // const DEFAULT_DISTRIBUTION = 50;
@@ -26,8 +21,8 @@ export default class YinYang {
         this.angle = 0;
         this.rotation = ROTATIONS.NONE;
         this.distributions = {
-            [COLOR.WHITE]: 0,
-            [COLOR.BLACK]: 0,
+            [COLORS.WHITE]: 0,
+            [COLORS.BLACK]: 0,
         };
         this.bindEvents();
         this.innerCircleRadius = this.radius / 8;
@@ -69,31 +64,31 @@ export default class YinYang {
         // Some unofficial key binds that let you resize the yin yang for testing purposes
         const changeWhiteDot = (e) => {
             const amount = e.deltaY;
-            this.increaseDot(COLOR.WHITE, amount);
+            this.increaseDot(COLORS.WHITE, amount);
         };
         const changeBlackDot = (e) => {
             const amount = e.deltaY;
-            this.increaseDot(COLOR.BLACK, amount);
+            this.increaseDot(COLORS.BLACK, amount);
         };
         const enableSizing = (color) => {
             document.addEventListener(
                 'mousewheel',
-                color === COLOR.WHITE ? changeWhiteDot : changeBlackDot,
+                color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
             );
         };
         const disableSizing = (color) => {
             document.removeEventListener(
                 'mousewheel',
-                color === COLOR.WHITE ? changeWhiteDot : changeBlackDot,
+                color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
             );
         };
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'c') enableSizing(COLOR.WHITE);
-            if (e.key === 'z') enableSizing(COLOR.BLACK);
+            if (e.key === 'c') enableSizing(COLORS.WHITE);
+            if (e.key === 'z') enableSizing(COLORS.BLACK);
         });
         document.addEventListener('keyup', (e) => {
-            if (e.key === 'c') disableSizing(COLOR.WHITE);
-            if (e.key === 'z') disableSizing(COLOR.BLACK);
+            if (e.key === 'c') disableSizing(COLORS.WHITE);
+            if (e.key === 'z') disableSizing(COLORS.BLACK);
         });
     }
 
@@ -114,9 +109,9 @@ export default class YinYang {
         ctx.rotate(this.angle);
 
         this.drawCover(ctx);
-        this.drawHalf(ctx, COLOR.BLACK);
+        this.drawHalf(ctx, COLORS.BLACK);
         ctx.rotate(Math.PI);
-        this.drawHalf(ctx, COLOR.WHITE);
+        this.drawHalf(ctx, COLORS.WHITE);
         ctx.restore();
     }
 
@@ -156,8 +151,8 @@ export default class YinYang {
     }
 
     checkCriticalImbalance() {
-        const whiteInnerRadius = this.innerCircleRadius + this.distributions[COLOR.WHITE];
-        const blackInnerRadius = this.innerCircleRadius + this.distributions[COLOR.BLACK];
+        const whiteInnerRadius = this.innerCircleRadius + this.distributions[COLORS.WHITE];
+        const blackInnerRadius = this.innerCircleRadius + this.distributions[COLORS.BLACK];
 
         if (whiteInnerRadius >= this.radius * 2) {
             console.log('Game over: white orb is too big');
@@ -217,10 +212,10 @@ export default class YinYang {
         const xRot = dx * cos - dy * sin;
 
         // left side is white, right side is black
-        return xRot < 0 ? COLOR.WHITE : COLOR.BLACK;
+        return xRot < 0 ? COLORS.WHITE : COLORS.BLACK;
     }
 
     getOppositeColor(color) {
-        return color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        return color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK;
     }
 }

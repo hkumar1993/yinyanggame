@@ -1,4 +1,5 @@
 import { updateScoreValue } from './ui.js';
+import { COLORS } from './constants.js';
 
 // Basic GameState object, not doing any redux or things for now
 const state = {
@@ -14,7 +15,7 @@ const state = {
 export default state;
 
 export const increaseImbalance = (side, increment) => {
-    if (side === 'black') {
+    if (side === COLORS.BLACK) {
         state.imbalancedYang = state.imbalancedYang + increment;
         updateScoreValue('imbalanced-yang', state.imbalancedYang);
     } else {
