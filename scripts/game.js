@@ -2,6 +2,8 @@ import Pickups from './pickups.js';
 import state from './state.js';
 import YinYang from './yinyang.js';
 import Timer from './timer.js';
+import eventBus from './eventbus.js';
+import {EVENTS} from './constants.js';
 
 export default class Game {
     constructor() {
@@ -13,12 +15,27 @@ export default class Game {
         this.timer = new Timer();
         this.orbs = {};
         this.countOrbs = 0;
-        this.interval = setInterval(() => {
-            this.spawnOrb();
-        }, 500);
+        this.interval = null;
+        this.animationInterval = null;
+        this.paused = false;
+        this.setupEventBindings();
+        this.start();
+    }
 
-        this.timer.start();
-        this.loop();
+    setupEventBindings() {
+        eventBus.subscribe(EVENTS.MENU_OPEN, () => {
+            if (this.paused) {
+                this.paused = false;
+                this.start();
+            } else {
+                this.paused = true;
+                this.pause();
+            }
+        });
+        eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
+            console.log(message);
+            this.pause();
+        });
     }
 
     spawnOrb() {
@@ -35,7 +52,6 @@ export default class Game {
             case 2: x = Math.random() * this.canvas.width; y = this.canvas.height; break;
             case 3: x = 0; y = Math.random() * this.canvas.height; break;
         }
-        // const color = Math.random() < 0.5 ? 'white' : 'black';
 
         const id = this.countOrbs++;
         this.orbs[id] = new Pickups(x, y, id);
@@ -60,6 +76,23 @@ export default class Game {
     loop() {
         this.update();
         this.draw();
-        requestAnimationFrame(() => this.loop());
+        this.animationInterval = requestAnimationFrame(() => this.loop());
+    }
+
+    start() {
+        this.interval = setInterval(() => {
+            this.spawnOrb();
+        }, 500);
+
+        this.timer.start();
+        this.loop();
+    }
+
+    pause() {
+        clearInterval(this.interval);
+        cancelAnimationFrame(this.animationInterval);
+        this.interval = null;
+        this.animationInterval = null;
+        this.timer.pause();
     }
 }
