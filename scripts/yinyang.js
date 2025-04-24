@@ -1,8 +1,8 @@
 import eventBus from './eventbus.js';
-import {
-    increaseImbalance,
-    increaseScore,
-} from './state.js';
+import { increaseImbalance, increaseScore } from './state.js';
+
+//TODO:  move to a helper file if useful?
+const applyLimit = (value, [min, max]) => Math.max(min, Math.min(value, max));
 
 const ROTATIONS = Object.freeze({
     LEFT: 'left',
@@ -29,6 +29,9 @@ export default class YinYang {
             [COLOR.BLACK]: 0,
         };
         this.bindEvents();
+        this.innerCircleRadius = this.radius / 8;
+        this.maxDistribution = 2 * this.radius - this.innerCircleRadius;
+        this.minDistribution = -this.innerCircleRadius;
     }
 
     bindEvents() {
@@ -55,8 +58,38 @@ export default class YinYang {
             } else {
                 // increase dot
                 this.increaseDot(color, 2);
-                increaseImbalance(side, 5)
+                increaseImbalance(side, 5);
             }
+        });
+
+        // Some unofficial key binds that let you resize the yin yang for testing purposes
+        const changeWhiteDot = (e) => {
+            const amount = e.deltaY;
+            this.increaseDot(COLOR.WHITE, amount);
+        };
+        const changeBlackDot = (e) => {
+            const amount = e.deltaY;
+            this.increaseDot(COLOR.BLACK, amount);
+        };
+        const enableSizing = (color) => {
+            document.addEventListener(
+                'mousewheel',
+                color === COLOR.WHITE ? changeWhiteDot : changeBlackDot,
+            );
+        };
+        const disableSizing = (color) => {
+            document.removeEventListener(
+                'mousewheel',
+                color === COLOR.WHITE ? changeWhiteDot : changeBlackDot,
+            );
+        };
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'c') enableSizing(COLOR.WHITE);
+            if (e.key === 'z') enableSizing(COLOR.BLACK);
+        });
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'c') disableSizing(COLOR.WHITE);
+            if (e.key === 'z') disableSizing(COLOR.BLACK);
         });
     }
 
@@ -107,15 +140,49 @@ export default class YinYang {
 
     drawInnerCircle(ctx, color) {
         const r = this.radius;
-        const innerCircleRadius = Math.min(2 * r, r / 8 + this.distributions[color]);
+        const distribution = applyLimit(this.distributions[color], [
+            this.minDistribution,
+            this.maxDistribution,
+        ]);
+        const radius = this.innerCircleRadius + distribution;
         ctx.beginPath();
-        ctx.arc(0, -r / 2, innerCircleRadius, 0, Math.PI * 2);
+        ctx.arc(0, -r / 2, radius, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
     }
 
+    checkCriticalImbalance() {
+        const whiteInnerRadius = this.innerCircleRadius + this.distributions[COLOR.WHITE];
+        const blackInnerRadius = this.innerCircleRadius + this.distributions[COLOR.BLACK];
+
+        if (whiteInnerRadius >= this.radius * 2) {
+            console.log('Game over: white orb is too big');
+        }
+        if (whiteInnerRadius <= 0) {
+            console.log('Game over: white orb is too small');
+        }
+        if (blackInnerRadius >= this.radius * 2) {
+            console.log('Game over: black orb is too big');
+        }
+        if (blackInnerRadius <= 0) {
+            console.log('Game over: black orb is too small');
+        }
+
+        return (
+            whiteInnerRadius >= this.maxDistribution ||
+            whiteInnerRadius <= this.minDistribution ||
+            blackInnerRadius >= this.maxDistribution ||
+            blackInnerRadius <= this.minDistribution
+        );
+    }
+
     increaseDot(color, value) {
-        this.distributions[color] = this.distributions[color] + value;
+        this.distributions[color] = applyLimit(this.distributions[color] + value, [
+            this.minDistribution,
+            this.maxDistribution,
+        ]);
+
+        this.checkCriticalImbalance();
     }
 
     drawCover(ctx) {
