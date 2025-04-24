@@ -12,3 +12,10 @@ body {
     background: red;
     margin: auto;
 }
+
+#ui-container {
+    display: grid;
+    grid-template-columns: 1fr 600px 1fr;
+    width: 100%;
+    color: white;
+}
