@@ -1,9 +1,9 @@
-export const COLORS = {
+export const COLORS = Object.freeze({
     BLACK: 'black',
-    WHITE: 'white,'
-};
+    WHITE: 'white',
+});
 
-export const EVENTS = {
+export const EVENTS = Object.freeze({
     LEFT: 'LEFT',
     RIGHT: 'RIGHT',
     MENU_OPEN: 'MENU_OPEN',
@@ -11,4 +11,4 @@ export const EVENTS = {
     GAME_OVER: 'GAME_OVER',
     START_GAME: 'START_GAME',
     PICKUP: 'PICKUP',
-}
+});
