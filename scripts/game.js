@@ -24,12 +24,15 @@ export default class Game {
 
     setupEventBindings() {
         eventBus.subscribe(EVENTS.GAME_PAUSE, () => {
-            if (this.paused) {
-                this.start();
-            } else {
+            if (!this.paused) {
                 this.pause();
             }
         });
+        eventBus.subscribe(EVENTS.GAME_RESUME, () => {
+            if (this.paused) {
+                this.start();
+            }
+        })
         eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
             console.log(message);
             this.pause();

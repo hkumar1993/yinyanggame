@@ -1,10 +1,14 @@
 import Game from './game.js';
+import Menu from './menu.js';
 import eventBus from './eventbus.js';
 import {
     keybinds,
     getKeyActionMap,
 } from './keybinds.js';
 import { EVENTS } from './constants.js';
+
+const game = new Game();
+// const menu = new Menu(game);
 
 const keyActionsMap = getKeyActionMap(keybinds);
 document.addEventListener('keydown', (e) => {
@@ -18,6 +22,14 @@ document.addEventListener('keydown', (e) => {
             });
         }
     });
+
+    if (e.key === 'Escape') {
+        if (game.paused) {
+            eventBus.publish(EVENTS.GAME_RESUME);
+        } else {
+            eventBus.publish(EVENTS.GAME_PAUSE);
+        }
+    }
 });
 
 document.addEventListener('keyup', (e) => {
@@ -27,10 +39,6 @@ document.addEventListener('keyup', (e) => {
         }
     });
 });
-
-
-console.log("Entering game")
-const game = new Game();
 
 document.addEventListener('visibilitychange', () => {
     if (game.paused) {
