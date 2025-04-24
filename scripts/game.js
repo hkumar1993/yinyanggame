@@ -1,5 +1,5 @@
 import Pickups from './pickups.js';
-import state from './state.js';
+import state, { resetState } from './state.js';
 import YinYang from './yinyang.js';
 import Timer from './timer.js';
 import eventBus from './eventbus.js';
@@ -21,7 +21,6 @@ export default class Game {
         this.started = false;
         this.setupEventBindings();
         this.draw();
-        // this.start();
     }
 
     setupEventBindings() {
@@ -39,6 +38,9 @@ export default class Game {
             if (!this.started) {
                 this.start();
             }
+        });
+        eventBus.subscribe(EVENTS.GAME_RESET, () => {
+            this.reset();
         });
         eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
             console.log(message);
@@ -107,5 +109,15 @@ export default class Game {
         this.animationInterval = null;
         this.timer.pause();
         this.paused = true;
+    }
+
+    reset() {
+        this.pause();
+        resetState();
+        this.orbs = {};
+        this.yinYang.resetValues();
+        this.timer.reset();
+        this.started = false;
+        this.draw();
     }
 }

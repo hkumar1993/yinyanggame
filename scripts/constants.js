@@ -10,5 +10,6 @@ export const EVENTS = Object.freeze({
     GAME_PAUSE: 'GAME_PAUSE',
     GAME_RESUME: 'GAME_RESUME',
     GAME_OVER: 'GAME_OVER',
+    GAME_RESET: 'GAME_RESET',
     PICKUP: 'PICKUP',
 });

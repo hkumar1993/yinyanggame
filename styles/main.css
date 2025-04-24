@@ -33,4 +33,10 @@ body {
     &.hidden {
         left: -999999px;
     }
+
+    .buttons {
+        .hidden {
+            display: none;
+        }
+    }
 }

@@ -218,4 +218,12 @@ export default class YinYang {
     getOppositeColor(color) {
         return color === COLORS.BLACK ? COLORS.WHITE : COLORS.BLACK;
     }
+
+    resetValues() {
+        this.angle = 0;
+        this.distributions = {
+            [COLORS.WHITE]: 0,
+            [COLORS.BLACK]: 0,
+        };
+    }
 }
