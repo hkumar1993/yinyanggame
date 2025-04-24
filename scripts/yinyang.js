@@ -1,5 +1,6 @@
 import eventBus from './eventbus.js';
 import { increaseImbalance, increaseScore } from './state.js';
+import { EVENTS } from './constants.js';
 
 //TODO:  move to a helper file if useful?
 const applyLimit = (value, [min, max]) => Math.max(min, Math.min(value, max));
@@ -35,23 +36,24 @@ export default class YinYang {
     }
 
     bindEvents() {
-        eventBus.subscribe('LEFT_KEYDOWN', () => {
+        eventBus.subscribe(`${EVENTS.LEFT}_KEYDOWN`, () => {
             this.rotation = ROTATIONS.LEFT;
         });
-        eventBus.subscribe('RIGHT_KEYDOWN', () => {
+        eventBus.subscribe(`${EVENTS.RIGHT}_KEYDOWN`, () => {
             this.rotation = ROTATIONS.RIGHT;
         });
-        eventBus.subscribe('LEFT_KEYUP', () => {
+        eventBus.subscribe(`${EVENTS.LEFT}_KEYUP`, () => {
             if (this.rotation === ROTATIONS.LEFT) {
                 this.rotation = ROTATIONS.NONE;
             }
         });
-        eventBus.subscribe('RIGHT_KEYUP', () => {
+        eventBus.subscribe(`${EVENTS.RIGHT}_KEYUP`, () => {
             if (this.rotation === ROTATIONS.RIGHT) {
                 this.rotation = ROTATIONS.NONE;
             }
         });
-        eventBus.subscribe('PICKUP', (id, x, y, color) => {
+        eventBus.subscribe(EVENTS.PICKUP, (pickup) => {
+            const { x, y, color } = pickup;
             const side = this.getSide(x, y);
             if (side === color) {
                 increaseScore(5);

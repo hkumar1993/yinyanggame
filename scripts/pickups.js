@@ -1,6 +1,7 @@
 const DEFAULT_RADIUS = 8;
 const DEFAULT_SPEED = 2;
 import eventBus from './eventbus.js';
+import { EVENTS } from './constants.js';
 
 /**
  * Items that the player can interact with.
@@ -29,7 +30,7 @@ export default class Pickups {
 
     handleCollision() {
         if (this.collided) return;
-        eventBus.publish('PICKUP', this.id, this.x, this.y, this.color);
+        eventBus.publish(EVENTS.PICKUP, this);
         this.collided = true;
     }
 
