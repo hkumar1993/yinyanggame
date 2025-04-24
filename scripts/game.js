@@ -1,6 +1,7 @@
 import Pickups from './pickups.js';
 import state from './state.js';
 import YinYang from './yinyang.js';
+import Timer from './timer.js';
 
 export default class Game {
     constructor() {
@@ -9,12 +10,14 @@ export default class Game {
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
         this.yinYang = new YinYang(this.centerX, this.centerY, state.playerRadius);
+        this.timer = new Timer();
         this.orbs = {};
         this.countOrbs = 0;
         this.interval = setInterval(() => {
             this.spawnOrb();
         }, 500);
 
+        this.timer.start();
         this.loop();
     }
 

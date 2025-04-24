@@ -1,7 +1,7 @@
 export const keybinds = {
     LEFT: ['ArrowLeft', 'a'],
     RIGHT: ['ArrowRight', 'd'],
-    OPEN_MENU: ['ESC'],
+    OPEN_MENU: ['Escape'],
 };
 
 export const getKeyActionMap = (keybinds) => {
