@@ -1,8 +1,8 @@
 export const keybinds = {
-    'LEFT': ['ArrowLeft', 'a'],
-    'RIGHT': ['ArrowRight', 'd'],
-    'OPEN_MENU': ['ESC'],
-}
+    LEFT: ['ArrowLeft', 'a'],
+    RIGHT: ['ArrowRight', 'd'],
+    OPEN_MENU: ['ESC'],
+};
 
 export const getKeyActionMap = (keybinds) => {
     const map = {};
@@ -15,5 +15,4 @@ export const getKeyActionMap = (keybinds) => {
         });
     });
     return map;
-}
-
+};
