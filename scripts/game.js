@@ -19,13 +19,23 @@ export default class Game {
     }
 
     spawnOrb() {
-        if (this.countOrbs > 100 && this.interval) {
+        if (this.countOrbs > 1000 && this.interval) {
             clearInterval(this.interval);
             this.interval = null;
             return;
         }
+        const edge = Math.floor(Math.random() * 4);
+        let x, y;
+        switch (edge) {
+            case 0: x = Math.random() * this.canvas.width; y = 0; break;
+            case 1: x = this.canvas.width; y = Math.random() * this.canvas.height; break;
+            case 2: x = Math.random() * this.canvas.width; y = this.canvas.height; break;
+            case 3: x = 0; y = Math.random() * this.canvas.height; break;
+        }
+        // const color = Math.random() < 0.5 ? 'white' : 'black';
+
         const id = this.countOrbs++;
-        this.orbs[id] = new Pickups(0, 0, id);
+        this.orbs[id] = new Pickups(x, y, id);
     }
 
     update() {
