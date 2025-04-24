@@ -52,6 +52,8 @@ export default class YinYang {
             const side = this.getSide(x, y);
             if (side === color) {
                 increaseScore(5);
+                const oppositeColor = this.getOppositeColor(color);
+                this.increaseDot(oppositeColor, -2);
             } else {
                 // increase dot
                 this.increaseDot(color, 2);
@@ -86,7 +88,7 @@ export default class YinYang {
     drawHalf(ctx, color) {
         const r = this.radius;
         // const rmod = 5;
-        const oppositeColor = color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        const oppositeColor = this.getOppositeColor(color);
         ctx.save();
         const halfPath = new Path2D();
         halfPath.moveTo(0, 0);
@@ -147,5 +149,9 @@ export default class YinYang {
 
         // left side is white, right side is black
         return xRot < 0 ? COLOR.WHITE : COLOR.BLACK;
+    }
+
+    getOppositeColor(color) {
+        return color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
     }
 }

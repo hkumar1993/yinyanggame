@@ -1,5 +1,5 @@
 const DEFAULT_RADIUS = 8;
-const DEFAULT_SPEED = 5;
+const DEFAULT_SPEED = 2;
 import eventBus from './eventbus.js';
 
 /**
