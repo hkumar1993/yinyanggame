@@ -3,7 +3,7 @@ import {EVENTS} from './constants.js';
 export const keybinds = {
     [EVENTS.LEFT]: ['ArrowLeft', 'a'],
     [EVENTS.RIGHT]: ['ArrowRight', 'd'],
-    [EVENTS.MENU_OPEN]: ['Escape'],
+    [EVENTS.GAME_PAUSE]: ['Escape'],
 };
 
 export const getKeyActionMap = (keybinds) => {

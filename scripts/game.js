@@ -23,12 +23,10 @@ export default class Game {
     }
 
     setupEventBindings() {
-        eventBus.subscribe(EVENTS.MENU_OPEN, () => {
+        eventBus.subscribe(EVENTS.GAME_PAUSE, () => {
             if (this.paused) {
-                this.paused = false;
                 this.start();
             } else {
-                this.paused = true;
                 this.pause();
             }
         });
@@ -83,9 +81,10 @@ export default class Game {
         this.interval = setInterval(() => {
             this.spawnOrb();
         }, 500);
-
+        
         this.timer.start();
         this.loop();
+        this.paused = false;
     }
 
     pause() {
@@ -94,5 +93,6 @@ export default class Game {
         this.interval = null;
         this.animationInterval = null;
         this.timer.pause();
+        this.paused = true;
     }
 }

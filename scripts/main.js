@@ -36,5 +36,5 @@ document.addEventListener('visibilitychange', () => {
     if (game.paused) {
         return;
     }
-    eventBus.publish(EVENTS.MENU_OPEN);
+    eventBus.publish(EVENTS.GAME_PAUSE);
 })
