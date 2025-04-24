@@ -8,9 +8,7 @@ body {
 }
 
 #game-container {
-    /* background: rgb(182, 182, 182); */
-    background: red;
-    margin: auto;
+    background: rgb(182, 182, 182);
 }
 
 #ui-container {
@@ -18,4 +16,21 @@ body {
     grid-template-columns: 1fr 600px 1fr;
     width: 100%;
     color: white;
+}
+
+#game-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#main-menu {
+    position: absolute;
+    height: 600px;
+    width: 600px;
+    background: rgba(182, 182, 182, 0.8);
+
+    &.hidden {
+        left: -999999px;
+    }
 }

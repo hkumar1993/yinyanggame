@@ -8,7 +8,7 @@ import {
 import { EVENTS } from './constants.js';
 
 const game = new Game();
-// const menu = new Menu(game);
+const menu = new Menu(game);
 
 const keyActionsMap = getKeyActionMap(keybinds);
 document.addEventListener('keydown', (e) => {
@@ -23,7 +23,7 @@ document.addEventListener('keydown', (e) => {
         }
     });
 
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && game.started) {
         if (game.paused) {
             eventBus.publish(EVENTS.GAME_RESUME);
         } else {

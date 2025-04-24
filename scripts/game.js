@@ -17,9 +17,11 @@ export default class Game {
         this.countOrbs = 0;
         this.interval = null;
         this.animationInterval = null;
-        this.paused = false;
+        this.paused = true;
+        this.started = false;
         this.setupEventBindings();
-        this.start();
+        this.draw();
+        // this.start();
     }
 
     setupEventBindings() {
@@ -29,10 +31,15 @@ export default class Game {
             }
         });
         eventBus.subscribe(EVENTS.GAME_RESUME, () => {
-            if (this.paused) {
+            if (this.paused && this.started) {
                 this.start();
             }
-        })
+        });
+        eventBus.subscribe(EVENTS.GAME_START, () => {
+            if (!this.started) {
+                this.start();
+            }
+        });
         eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
             console.log(message);
             this.pause();
@@ -81,6 +88,9 @@ export default class Game {
     }
 
     start() {
+        if (!this.started) {
+            this.started = true;
+        }
         this.interval = setInterval(() => {
             this.spawnOrb();
         }, 500);
