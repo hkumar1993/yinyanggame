@@ -1,9 +1,9 @@
+import { EVENTS } from './constants.js';
+import eventBus from './eventbus.js';
 import Pickups from './pickups.js';
 import state, { resetState } from './state.js';
-import YinYang from './yinyang.js';
 import Timer from './timer.js';
-import eventBus from './eventbus.js';
-import {EVENTS} from './constants.js';
+import YinYang from './yinyang.js';
 
 export default class Game {
     constructor() {
@@ -57,10 +57,22 @@ export default class Game {
         const edge = Math.floor(Math.random() * 4);
         let x, y;
         switch (edge) {
-            case 0: x = Math.random() * this.canvas.width; y = 0; break;
-            case 1: x = this.canvas.width; y = Math.random() * this.canvas.height; break;
-            case 2: x = Math.random() * this.canvas.width; y = this.canvas.height; break;
-            case 3: x = 0; y = Math.random() * this.canvas.height; break;
+            case 0:
+                x = Math.random() * this.canvas.width;
+                y = 0;
+                break;
+            case 1:
+                x = this.canvas.width;
+                y = Math.random() * this.canvas.height;
+                break;
+            case 2:
+                x = Math.random() * this.canvas.width;
+                y = this.canvas.height;
+                break;
+            case 3:
+                x = 0;
+                y = Math.random() * this.canvas.height;
+                break;
         }
 
         const id = this.countOrbs++;
@@ -96,7 +108,7 @@ export default class Game {
         this.interval = setInterval(() => {
             this.spawnOrb();
         }, 500);
-        
+
         this.timer.start();
         this.loop();
         this.paused = false;

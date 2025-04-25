@@ -1,11 +1,8 @@
-import Game from './game.js';
-import Menu from './menu.js';
-import eventBus from './eventbus.js';
-import {
-    keybinds,
-    getKeyActionMap,
-} from './keybinds.js';
 import { EVENTS } from './constants.js';
+import eventBus from './eventbus.js';
+import Game from './game.js';
+import { getKeyActionMap, keybinds } from './keybinds.js';
+import Menu from './menu.js';
 
 const game = new Game();
 const menu = new Menu(game);
@@ -45,4 +42,4 @@ document.addEventListener('visibilitychange', () => {
         return;
     }
     eventBus.publish(EVENTS.GAME_PAUSE);
-})
+});
