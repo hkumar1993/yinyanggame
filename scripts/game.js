@@ -43,7 +43,7 @@ export default class Game {
             this.reset();
         });
         eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
-            console.log(message);
+            state.endTime = this.timer.getDisplayTime(this.timer.elapsed);
             this.pause();
         });
     }

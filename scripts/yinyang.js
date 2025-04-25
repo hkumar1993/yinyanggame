@@ -72,13 +72,13 @@ export default class YinYang {
         };
         const enableSizing = (color) => {
             document.addEventListener(
-                'mousewheel',
+                'DOMMouseScroll',
                 color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
             );
         };
         const disableSizing = (color) => {
             document.removeEventListener(
-                'mousewheel',
+                'DOMMouseScroll',
                 color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
             );
         };
@@ -153,26 +153,28 @@ export default class YinYang {
     checkCriticalImbalance() {
         const whiteInnerRadius = this.innerCircleRadius + this.distributions[COLORS.WHITE];
         const blackInnerRadius = this.innerCircleRadius + this.distributions[COLORS.BLACK];
-
+        let gameEnded = false;
+        let gameEndMessage = '';
+        
         if (whiteInnerRadius >= this.radius * 2) {
-            console.log('Game over: white orb is too big');
+            gameEnded = true;
+            gameEndMessage = 'Game over: white orb is too big';
         }
         if (whiteInnerRadius <= 0) {
-            console.log('Game over: white orb is too small');
+            gameEnded = true;
+            gameEndMessage = 'Game over: white orb is too small';
         }
         if (blackInnerRadius >= this.radius * 2) {
-            console.log('Game over: black orb is too big');
+            gameEnded = true;
+            gameEndMessage = 'Game over: black orb is too big';
         }
         if (blackInnerRadius <= 0) {
-            console.log('Game over: black orb is too small');
+            gameEnded = true;
+            gameEndMessage = 'Game over: black orb is too small';
         }
-
-        return (
-            whiteInnerRadius >= this.maxDistribution ||
-            whiteInnerRadius <= this.minDistribution ||
-            blackInnerRadius >= this.maxDistribution ||
-            blackInnerRadius <= this.minDistribution
-        );
+        if (gameEnded) {
+            eventBus.publish(EVENTS.GAME_OVER, gameEndMessage);
+        }
     }
 
     increaseDot(color, value) {

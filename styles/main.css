@@ -68,6 +68,38 @@ body {
             margin-bottom: 0.5rem;
         }
     }
+
+    &.game-over {
+        #game-over {
+            display: unset;
+        }
+        #start-game {
+            display: none;
+        }
+        #tutorial {
+            display: none;
+        }
+    }
+}
+
+#game-over {
+    display: none;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+
+    div:nth-child(even) {
+        color: black;
+        text-shadow: white 1px 1px 4px;
+    }
+    div:nth-child(odd) {
+        color: white;
+        text-shadow: black 1px 1px 4px;
+    }
+
+    #game-over-msg {
+        margin-bottom: 0.5rem;
+    }
 }
 
 h1 {

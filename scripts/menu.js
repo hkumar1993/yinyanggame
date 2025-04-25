@@ -1,5 +1,6 @@
 import eventBus from "./eventbus.js";
 import { EVENTS } from "./constants.js";
+import state from './state.js';
 
 export default class MainMenu {
     constructor(game) {
@@ -14,14 +15,17 @@ export default class MainMenu {
 
         this.resetButton.addEventListener('click', () => {
             this.resetGame();
-        })
+        });
 
         eventBus.subscribe(EVENTS.GAME_PAUSE, () => {
             this.showMenu();
-        })
+        });
         eventBus.subscribe(EVENTS.GAME_RESUME, () => {
             this.hideMenu();
-        })
+        });
+        eventBus.subscribe(EVENTS.GAME_OVER, () => {
+            this.gameOver();
+        });
     }
 
     startGame() {
@@ -36,6 +40,7 @@ export default class MainMenu {
     }
 
     resetGame() {
+        this.menuElement.classList.remove('game-over');
         this.startButton.innerText = 'Start Game';
         this.resetButton.classList.add('hidden');
         eventBus.publish(EVENTS.GAME_RESET);
@@ -51,5 +56,11 @@ export default class MainMenu {
 
     menuVisible() {
         return !this.menuElement.classList.contains('hidden');
+    }
+
+    gameOver() {
+        this.menuElement.classList.add('game-over');
+        document.getElementById('final-score-time').innerText = state.endTime;
+        this.showMenu();
     }
 }
