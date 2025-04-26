@@ -1,48 +1,63 @@
 import { EVENTS } from './constants.js';
 import eventBus from './eventbus.js';
 
-export default class Soundboard {
+const PICKUP_SOUND_1 = new Audio('./sound/UI_Quirky3.mp3');
+const PICKUP_SOUND_2 = new Audio('./sound/UI_Quirky4.mp3');
+const BGM = new Audio('./sound/Hypnotic-Puzzle4.mp3');
+BGM.loop = true;
+BGM.volume = 0.5;
+
+const AUDIO_POOL = [
+    PICKUP_SOUND_1.cloneNode(),
+    PICKUP_SOUND_1.cloneNode(),
+    PICKUP_SOUND_1.cloneNode(),
+    PICKUP_SOUND_1.cloneNode(),
+]
+
+class Soundboard {
     constructor() {
         this.isMuted = false;
-        this.audioElements = {
-            bgm: document.getElementById('bgm'),
-            pickup1: document.getElementById('pickup-1'),
-            pickup2: document.getElementById('pickup-2'),
-        };
         this.bindEvents();
+        this.bgmCanPlay = false;
+        BGM.addEventListener('canplaythrough', () => {
+            this.bgmCanPlay = true;
+            BGM.play();
+        });
+        this.currentSoundIndex = 0;
     }
 
     bindEvents() {
         eventBus.subscribe(EVENTS.PICKUP, () => {
-            this.play('pickup1');
-        });
-
-        eventBus.subscribe(EVENTS.GAME_PAUSE, () => {
-            this.stopAll();
-        });
-        eventBus.subscribe(EVENTS.GAME_RESUME, () => {
-            this.play('bgm');
-        });
-        eventBus.subscribe(EVENTS.GAME_START, () => {
-            this.play('bgm');
+            this.playCollision();
         });
     }
 
-    play(id) {
-        if (!this.isMuted) {
-            this.audioElements[id].play();
+    playCollision() {
+        if (this.isMuted) {
+            return;
         }
-    }
-
-    stop(id) {
-        if (!this.isMuted) {
-            this.audioElements[id].pause();
-        }
+        const sound = AUDIO_POOL[this.currentSoundIndex];
+        sound.currentTime = 0;
+        sound.play();
+        this.currentSoundIndex = (this.currentSoundIndex + 1) % AUDIO_POOL.length;
     }
 
     stopAll() {
-        if (!this.isMuted) {
-            Object.values(this.audioElements).forEach((audio) => audio.pause());
+        BGM.pause();
+        PICKUP_SOUND_1.pause();
+        PICKUP_SOUND_2.pause();
+    }
+
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.isMuted) {
+            this.stopAll();
+        } else {
+            if (!this.bgmCanPlay) { return; }
+            BGM.play();
         }
     }
 }
+
+const soundboard = new Soundboard();
+export default soundboard;
