@@ -1,5 +1,3 @@
-import { EVENTS } from './constants.js';
-import eventBus from './eventbus.js';
 import Pickups from './pickups.js';
 import state, { resetState } from './state.js';
 import Timer from './timer.js';
@@ -13,8 +11,8 @@ export default class Game {
         this.ctx = this.canvas.getContext('2d');
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
-        this.yinYang = new YinYang(this.centerX, this.centerY, state.playerRadius);
         this.timer = new Timer();
+        this.yinYang = new YinYang(this.centerX, this.centerY, this.timer);
         this.orbs = {};
         this.countOrbs = 0;
         this.interval = null;
@@ -115,6 +113,7 @@ export default class Game {
     start() {
         if (!this.started) {
             this.started = true;
+            this.spawnOrb();
         }
         this.interval = setInterval(() => {
             this.spawnOrb();

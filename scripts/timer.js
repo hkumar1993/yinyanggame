@@ -80,6 +80,7 @@ export default class Timer {
         this.elapsed = 0;
         this.running = false;
         this.interval = null;
+        this.nextLevel = 0;
         updateScoreValue('timer', this.getDisplayTime(0));
     }
 

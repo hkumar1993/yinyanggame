@@ -18,38 +18,36 @@ export const EVENTS = Object.freeze({
 export const TIMER_LEVELS = Object.freeze([
     {
         time: 0, 
-        orbSpawnTime: 3000,
-        orbSpeed: 1,
-        rotationSpeed: 0.05,
+        orbSpawnTime: 2000,
+        orbSpeed: 3,
     },
     {
         time: 30_000, 
-        orbSpawnTime: 2000,
-        orbSpeed: 1,
-        rotationSpeed: 0.1,
+        orbSpawnTime: 1500,
+        orbSpeed: 3,
     },
     {
         time: 60_000, 
         orbSpawnTime: 1000,
-        orbSpeed: 1,
-        rotationSpeed: 0.1,
+        orbSpeed: 3,
     },
     {
         time: 120_000, 
         orbSpawnTime: 800,
-        orbSpeed: 1,
-        rotationSpeed: 0.2,
+        orbSpeed: 4,
     },
     {
         time: 180_000, 
         orbSpawnTime: 600,
-        orbSpeed: 2,
-        rotationSpeed: 0.2,
+        orbSpeed: 4,
     },
     {
         time: 240_000, 
-        orbSpawnTime: 300,
-        orbSpeed: 2,
-        rotationSpeed: 0.2,
+        orbSpawnTime: 400,
+        orbSpeed: 5,
     },
-])
+]);
+
+export const isLocal = () => {
+    return window.location.hostname.includes('localhost');
+}
