@@ -1,4 +1,6 @@
 import { updateScoreValue } from './ui.js';
+import { TIMER_LEVELS, EVENTS } from './constants.js';
+import eventBus from './eventbus.js';
 
 export default class Timer {
     constructor() {
@@ -6,6 +8,7 @@ export default class Timer {
         this.elapsed = 0;
         this.running = false;
         this.interval = null;
+        this.nextLevel = 0;
     }
 
     start() {
@@ -50,9 +53,10 @@ export default class Timer {
         }
         const currentTime = performance.now();
         this.elapsed = currentTime - this.startTime;
-        this.interval = requestAnimationFrame(this.update.bind(this));
         const ms = this.getDisplayTime(this.elapsed);
+        this.interval = requestAnimationFrame(() => this.update());
         updateScoreValue('timer', ms);
+        this.checkLevelProgression();
     }
 
     getDisplayTime(ms) {
@@ -77,5 +81,13 @@ export default class Timer {
         this.running = false;
         this.interval = null;
         updateScoreValue('timer', this.getDisplayTime(0));
+    }
+
+    checkLevelProgression() {
+        const nextLevel = TIMER_LEVELS[this.nextLevel];
+        if (nextLevel && this.elapsed >= nextLevel.time) {
+            eventBus.publish(EVENTS.NEXT_LEVEL, this.nextLevel);
+            this.nextLevel += 1;
+        }
     }
 }

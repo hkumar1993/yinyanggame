@@ -4,6 +4,8 @@ import Pickups from './pickups.js';
 import state, { resetState } from './state.js';
 import Timer from './timer.js';
 import YinYang from './yinyang.js';
+import eventBus from './eventbus.js';
+import {EVENTS, TIMER_LEVELS} from './constants.js';
 
 export default class Game {
     constructor() {
@@ -21,6 +23,8 @@ export default class Game {
         this.started = false;
         this.setupEventBindings();
         this.draw();
+        this.orbSpawnTime = TIMER_LEVELS[0].orbSpawnTime;
+        this.orbSpeed = TIMER_LEVELS[0].orbSpeed;
     }
 
     setupEventBindings() {
@@ -45,6 +49,13 @@ export default class Game {
         eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
             state.endTime = this.timer.getDisplayTime(this.timer.elapsed);
             this.pause();
+        });
+        eventBus.subscribe(EVENTS.NEXT_LEVEL, (levelId) => {
+            const newLevel = TIMER_LEVELS[levelId];
+            this.orbSpawnTime = newLevel.orbSpawnTime;
+            this.orbSpeed = newLevel.orbSpeed;
+            clearInterval(this.interval);
+            this.interval = setInterval(() => this.spawnOrb(), this.orbSpawnTime);
         });
     }
 
@@ -76,7 +87,7 @@ export default class Game {
         }
 
         const id = this.countOrbs++;
-        this.orbs[id] = new Pickups(x, y, id);
+        this.orbs[id] = new Pickups(x, y, id, this.orbSpeed);
     }
 
     update() {
@@ -107,8 +118,8 @@ export default class Game {
         }
         this.interval = setInterval(() => {
             this.spawnOrb();
-        }, 500);
-
+        }, this.orbSpawnTime);
+        
         this.timer.start();
         this.loop();
         this.paused = false;
