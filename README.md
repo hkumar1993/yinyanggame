@@ -1,10 +1,6 @@
-# Balance Game Name TBD
+# Yinbound
 
-
-
-## Game mechanic
-
-Keep the world in balance. Dont let the yin yang symbol become out of balance.
+Keep the world in balance. Don't let the dark or light take over.
 
 ## Features
 
@@ -12,30 +8,30 @@ Keep the world in balance. Dont let the yin yang symbol become out of balance.
 
 [] Update Scoreboard
     [x] Time Score : how long youve lasted
-    [] Balance Score: how close to zero are you , absoulte of the difference of the dot sizes
+    ~[] Balance Score: how close to zero are you , absoulte of the difference of the dot sizes~
 
-[] Leveling
-    [] Increase spawn rate / orb speed based on how long the player has lasted
+[x] Leveling
+    [x] Increase spawn rate / orb speed based on how long the player has lasted
 
-[] Game end mechanic
-    [] catch the error and show end state (dont break shi)
-    [] setup game end if one side has been completely overtaken
+[x] Game end mechanic
+    [x] catch the error and show end state (dont break shi)
+    [x] setup game end if one side has been completely overtaken
 
-[] Sound Effects
+[x] Sound Effects
 
 [] UI (HTML)
     [] Main Menu
-        [] Sound control
+        [x] Sound control
         [] Key control ? (rebind keys)
         [x] Start Game
         [x] Restart Game (if in game)
         [] Credits
             [] links to our githubs / itchio pages
             [] any assets used should be listed here
-    [] End state
-        [] Retry
+    [x] End state
+        [x] Retry
         [] Display high score (future?)
-    [] Running timer
+    [x] Running timer
 
 ## Credits
 
