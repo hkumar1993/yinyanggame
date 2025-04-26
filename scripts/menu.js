@@ -5,23 +5,23 @@ import state from './state.js';
 
 const TUTORIAL_SCREENS = [
     {
-        src: '../img/balance.png',
+        id: 'bal',
         text: 'Keep the world in balance. Rotate the symbol to collect the dark and light energies of the world.',
     },
     {
-        src: '../img/dark-over-light-1.png',
+        id: 'dol1',
         text: 'Collect dark energy on the dark side. Don\'t let the dark side take over its inner light.',
     },
     {
-        src: '../img/light-over-dark-2.png',
+        id: 'lod2',
         text: 'Collect light energy on the dark side. Don\'t let the light take over the dark side.',
     },
     {
-        src: '../img/light-over-dark-1.png',
+        id: 'lod1',
         text: 'Collect light energy on the dark side. Don\'t let the light side take over its inner dark.',
     },
     {
-        src: '../img/dark-over-light-2.png',
+        id: 'dol2',
         text: 'Collect dark energy on the light side. Don\'t let the dark take over the light side.',
     },
 ]
@@ -36,6 +36,13 @@ export default class MainMenu {
         this.tutorialButton = document.getElementById('tutorial');
         this.game = game;
         this.tutorialStep = 0;
+        this.showingTutorial = false;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.showingTutorial) {
+                this.endTutorial();
+            }
+        })
 
         this.startButton.addEventListener('click', () => {
             this.startGame();
@@ -64,7 +71,7 @@ export default class MainMenu {
             this.updateTutorialStep(1);
         });
         this.closeTut.addEventListener('click', () => {
-            document.getElementById('tutorial-ui').classList.add('hidden');
+            this.endTutorial();
         })
 
 
@@ -126,9 +133,21 @@ export default class MainMenu {
         tutorialUI.classList.remove('hidden');
         this.tutorialStep = 0;
         this.updateTutorialStep(0);
+        this.showingTutorial = true;
+    }
+
+    endTutorial() {
+        TUTORIAL_SCREENS.forEach(({id}) => document.getElementById(id)?.classList.add('hidden'));
+        document.getElementById('tutorial-ui').classList.add('hidden');
+        this.showingTutorial = false;
     }
 
     updateTutorialStep(change) {
+        const prevScreen = TUTORIAL_SCREENS[this.tutorialStep];
+        const prevImg = document.getElementById(prevScreen.id);
+        console.log({prevScreen, prevImg})
+        prevImg.classList.add('hidden');
+
         this.tutorialStep += change;
         if (this.tutorialStep === 0) {
             // disable left tut
@@ -143,8 +162,8 @@ export default class MainMenu {
         }
 
         const screen = TUTORIAL_SCREENS[this.tutorialStep];
-        const img = document.getElementById('tutorial-img');
-        img.src = screen?.src;
+        const img = document.getElementById(screen.id);
+        img.classList.remove('hidden');
 
         const text = document.getElementById('tutorial-text');
         text.innerText = screen?.text;

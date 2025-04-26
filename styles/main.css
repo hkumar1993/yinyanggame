@@ -203,10 +203,16 @@ body {
     display: grid;
     grid-template-columns: 50px 1fr 50px;
 
-    #tutorial-img {
+    .tutorial-img {
+        /* position: absolute;
+        top: 0; */
         height: 500px;
         width: 500px;
         margin: 0 auto;
+        opacity: 1;
+        &.hidden {
+            display: none;
+        }
     }
 
     #tutorial-text {
