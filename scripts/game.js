@@ -5,6 +5,8 @@ import YinYang from './yinyang.js';
 import eventBus from './eventbus.js';
 import {EVENTS, TIMER_LEVELS} from './constants.js';
 
+const UI = document.getElementById('game-ui');
+
 export default class Game {
     constructor() {
         this.canvas = document.getElementById('game-container');
@@ -122,6 +124,7 @@ export default class Game {
         this.timer.start();
         this.loop();
         this.paused = false;
+        UI.classList.remove('hidden');
     }
 
     pause() {
@@ -131,6 +134,7 @@ export default class Game {
         this.animationInterval = null;
         this.timer.pause();
         this.paused = true;
+        UI.classList.add('hidden');
     }
 
     reset() {
