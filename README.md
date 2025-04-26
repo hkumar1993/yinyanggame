@@ -36,3 +36,7 @@ Keep the world in balance. Dont let the yin yang symbol become out of balance.
         [] Retry
         [] Display high score (future?)
     [] Running timer
+
+## Credits
+
+https://beamedeighth.itch.io/simplekeys-animated-pixel-keyboard-keys

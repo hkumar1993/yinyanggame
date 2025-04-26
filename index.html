@@ -17,11 +17,7 @@
         <div id="soundboard">
         </div>
         <div id="ui-container">
-            <div id="score-container">
-                <div><b>Time</b>: <span id="timer">00:00:000</span></div>
-                <div><b>Total Score</b>: <span id="total-score">0</span></div>
-                <div><b>Imbalanced Yin</b>: <span id="imbalanced-yin">0</span></div>
-                <div><b>Imbalanced Yang</b>: <span id="imbalanced-yang">0</span></div>
+            <div>
             </div>
             <div id="game-wrapper">
                 <canvas id="game-container" width="600" height="600"> </canvas>
@@ -40,6 +36,27 @@
                     </div>
                     <div class="credits">
                         <button>Credits</button>
+                    </div>
+                </div>
+                <div id="game-ui" class="hidden">
+                    <div class="timer-container">
+                        <b>Time:</b> <span id="timer">00:00:000</span>
+                    </div>
+                    <div class="keys">
+                        <div id="left-key" class="keymap">
+                            <div class="rot-icon"></div>
+                            <span>=</span>
+                            <div class="key-icon"></div>
+                            <span>/</span>
+                            <div class="key-icon-sub"></div>
+                        </div>
+                        <div id="right-key" class="keymap">
+                            <div class="rot-icon"></div>
+                            <span>=</span>
+                            <div class="key-icon"></div>
+                            <span>/</span>
+                            <div class="key-icon-sub"></div>
+                        </div>
                     </div>
                 </div>
             </div>
