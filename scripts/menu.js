@@ -1,10 +1,10 @@
 import { EVENTS } from './constants.js';
 import eventBus from './eventbus.js';
-import Soundboard from './soundboard.js';
+import soundboard from './soundboard.js';
 import state from './state.js';
 export default class MainMenu {
     constructor(game) {
-        this.soundboard = new Soundboard();
+        this.soundboard = soundboard;
         this.menuElement = document.getElementById('main-menu');
         this.startButton = document.getElementById('start-game');
         this.muteButton = document.getElementById('mute');
@@ -46,7 +46,7 @@ export default class MainMenu {
     }
 
     toggleMute() {
-        this.soundboard.isMuted = !this.soundboard.isMuted;
+        this.soundboard.toggleMute();
         this.muteButton.innerText = this.soundboard.isMuted ? 'Unmute' : 'Mute';
     }
 
