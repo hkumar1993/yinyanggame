@@ -1,7 +1,8 @@
+import {EVENTS} from './constants.js';
+
 export const keybinds = {
-    LEFT: ['ArrowLeft', 'a'],
-    RIGHT: ['ArrowRight', 'd'],
-    OPEN_MENU: ['Escape'],
+    [EVENTS.LEFT]: ['ArrowLeft', 'a'],
+    [EVENTS.RIGHT]: ['ArrowRight', 'd'],
 };
 
 export const getKeyActionMap = (keybinds) => {

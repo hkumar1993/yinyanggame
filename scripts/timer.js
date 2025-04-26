@@ -70,4 +70,12 @@ export default class Timer {
     padMilliseconds(num) {
         return num.toString().padStart(3, '0');
     }
+
+    reset() {
+        this.startTime = null;
+        this.elapsed = 0;
+        this.running = false;
+        this.interval = null;
+        updateScoreValue('timer', this.getDisplayTime(0));
+    }
 }

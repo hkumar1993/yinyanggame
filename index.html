@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/main.css">
-    <title>Name TBD</title>
-    <script type="module" src="scripts/main.js" defer></script>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Comforter+Brush&family=Zen+Dots&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="styles/main.css">
+   <title>Name TBD</title>
+<script type="module" src="scripts/main.js" defer></script>
 </head>
 <body>
     <div id="ui-container">
@@ -24,8 +27,34 @@
                 <b>Imbalanced Yang</b>: <span id="imbalanced-yang">0</span>
              </div>
         </div>
-        <canvas id="game-container" width="600" height="600">
-        </canvas>
+        <div id="game-wrapper">
+            <div id="main-menu">
+               <h1>Yinbound</h1>
+               <div id="game-over" class="hidden">
+                  <div id="game-over-msg">The world is out of balance!</div>
+                  <div>Your Time:</div>
+                  <div id="final-score-time">
+                     00:00:000
+                  </div>
+               </div>
+               <div class="buttons">
+                  <button id="start-game">
+                     Start Game
+                  </button>
+                  <button id="reset" class="hidden">
+                     Start Over
+                  </button>
+                  <button id="tutorial" disabled>
+                     Tutorial
+                  </button>
+               </div>
+               <div class="credits">
+                  <button>Credits</button>
+               </div>
+            </div>
+            <canvas id="game-container" width="600" height="600">
+            </canvas>
+        </div>
         <div>
 
         </div>
