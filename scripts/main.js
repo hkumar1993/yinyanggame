@@ -43,3 +43,5 @@ document.addEventListener('visibilitychange', () => {
     }
     eventBus.publish(EVENTS.GAME_PAUSE);
 });
+
+window.game = game;

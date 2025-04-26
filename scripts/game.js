@@ -1,9 +1,9 @@
-import { EVENTS } from './constants.js';
-import eventBus from './eventbus.js';
 import Pickups from './pickups.js';
 import state, { resetState } from './state.js';
 import Timer from './timer.js';
 import YinYang from './yinyang.js';
+import eventBus from './eventbus.js';
+import {EVENTS, TIMER_LEVELS} from './constants.js';
 
 export default class Game {
     constructor() {
@@ -11,8 +11,8 @@ export default class Game {
         this.ctx = this.canvas.getContext('2d');
         this.centerX = this.canvas.width / 2;
         this.centerY = this.canvas.height / 2;
-        this.yinYang = new YinYang(this.centerX, this.centerY, state.playerRadius);
         this.timer = new Timer();
+        this.yinYang = new YinYang(this.centerX, this.centerY, this.timer);
         this.orbs = {};
         this.countOrbs = 0;
         this.interval = null;
@@ -21,6 +21,8 @@ export default class Game {
         this.started = false;
         this.setupEventBindings();
         this.draw();
+        this.orbSpawnTime = TIMER_LEVELS[0].orbSpawnTime;
+        this.orbSpeed = TIMER_LEVELS[0].orbSpeed;
     }
 
     setupEventBindings() {
@@ -45,6 +47,13 @@ export default class Game {
         eventBus.subscribe(EVENTS.GAME_OVER, (message) => {
             state.endTime = this.timer.getDisplayTime(this.timer.elapsed);
             this.pause();
+        });
+        eventBus.subscribe(EVENTS.NEXT_LEVEL, (levelId) => {
+            const newLevel = TIMER_LEVELS[levelId];
+            this.orbSpawnTime = newLevel.orbSpawnTime;
+            this.orbSpeed = newLevel.orbSpeed;
+            clearInterval(this.interval);
+            this.interval = setInterval(() => this.spawnOrb(), this.orbSpawnTime);
         });
     }
 
@@ -76,7 +85,7 @@ export default class Game {
         }
 
         const id = this.countOrbs++;
-        this.orbs[id] = new Pickups(x, y, id);
+        this.orbs[id] = new Pickups(x, y, id, this.orbSpeed);
     }
 
     update() {
@@ -104,11 +113,12 @@ export default class Game {
     start() {
         if (!this.started) {
             this.started = true;
+            this.spawnOrb();
         }
         this.interval = setInterval(() => {
             this.spawnOrb();
-        }, 500);
-
+        }, this.orbSpawnTime);
+        
         this.timer.start();
         this.loop();
         this.paused = false;

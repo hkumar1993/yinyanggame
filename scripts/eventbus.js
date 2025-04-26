@@ -1,3 +1,5 @@
+import { isLocal } from './constants.js';
+
 class EventBus {
     constructor() {
         this.eventObject = {};
@@ -7,7 +9,7 @@ class EventBus {
     publish(eventName, ...args) {
         const callbackObject = this.eventObject[eventName];
 
-        if (!callbackObject) {
+        if (!callbackObject && isLocal()) {
             return console.warn(eventName + " not found!");
         }
 

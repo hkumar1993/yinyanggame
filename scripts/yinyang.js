@@ -1,6 +1,6 @@
 import eventBus from './eventbus.js';
 import { increaseImbalance, increaseScore } from './state.js';
-import { EVENTS, COLORS } from './constants.js';
+import { EVENTS, COLORS, isLocal } from './constants.js';
 
 //TODO:  move to a helper file if useful?
 const applyLimit = (value, [min, max]) => Math.max(min, Math.min(value, max));
@@ -11,15 +11,24 @@ const ROTATIONS = Object.freeze({
     NONE: 'none',
 });
 
+const RADIUS = 100;
+
+const STARTING_SPEED = 0.05;
+const MAX_SPEED = 0.2;
+const MAX_SPEED_TIME = 240_000; // 4 minutes
+
 // const DEFAULT_DISTRIBUTION = 50;
 
 export default class YinYang {
-    constructor(centerX, centerY, radius) {
+    constructor(centerX, centerY, timer) {
+        console.log(timer);
+        this.timer = timer;
         this.centerX = centerX;
         this.centerY = centerY;
-        this.radius = radius;
+        this.radius = RADIUS;
         this.angle = 0;
         this.rotation = ROTATIONS.NONE;
+        this.rotationSpeed = STARTING_SPEED;
         this.distributions = {
             [COLORS.WHITE]: 0,
             [COLORS.BLACK]: 0,
@@ -60,36 +69,37 @@ export default class YinYang {
                 increaseImbalance(side, 5);
             }
         });
-
-        // Some unofficial key binds that let you resize the yin yang for testing purposes
-        const changeWhiteDot = (e) => {
-            const amount = e.deltaY;
-            this.increaseDot(COLORS.WHITE, amount);
-        };
-        const changeBlackDot = (e) => {
-            const amount = e.deltaY;
-            this.increaseDot(COLORS.BLACK, amount);
-        };
-        const enableSizing = (color) => {
-            document.addEventListener(
-                'DOMMouseScroll',
-                color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
-            );
-        };
-        const disableSizing = (color) => {
-            document.removeEventListener(
-                'DOMMouseScroll',
-                color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
-            );
-        };
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'c') enableSizing(COLORS.WHITE);
-            if (e.key === 'z') enableSizing(COLORS.BLACK);
-        });
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'c') disableSizing(COLORS.WHITE);
-            if (e.key === 'z') disableSizing(COLORS.BLACK);
-        });
+        if (isLocal()) {
+            // Some unofficial key binds that let you resize the yin yang for testing purposes
+            const changeWhiteDot = (e) => {
+                const amount = e.deltaY;
+                this.increaseDot(COLORS.WHITE, amount);
+            };
+            const changeBlackDot = (e) => {
+                const amount = e.deltaY;
+                this.increaseDot(COLORS.BLACK, amount);
+            };
+            const enableSizing = (color) => {
+                document.addEventListener(
+                    'DOMMouseScroll',
+                    color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
+                );
+            };
+            const disableSizing = (color) => {
+                document.removeEventListener(
+                    'DOMMouseScroll',
+                    color === COLORS.WHITE ? changeWhiteDot : changeBlackDot,
+                );
+            };
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'c') enableSizing(COLORS.WHITE);
+                if (e.key === 'z') enableSizing(COLORS.BLACK);
+            });
+            document.addEventListener('keyup', (e) => {
+                if (e.key === 'c') disableSizing(COLORS.WHITE);
+                if (e.key === 'z') disableSizing(COLORS.BLACK);
+            });
+        }
     }
 
     rotate(direction, amount) {
@@ -102,8 +112,14 @@ export default class YinYang {
         this.angle = this.angle % (Math.PI * 2);
     }
 
+    updateSpeed() {
+        const timeBasedSpeed = MAX_SPEED * (Math.min(MAX_SPEED_TIME, this.timer.elapsed)/MAX_SPEED_TIME);
+        this.rotationSpeed = Math.max(STARTING_SPEED, timeBasedSpeed);
+    }
+
     draw(ctx) {
-        this.rotate(this.rotation, 0.05);
+        this.updateSpeed();
+        this.rotate(this.rotation, this.rotationSpeed);
         ctx.save();
         ctx.translate(this.centerX, this.centerY);
         ctx.rotate(this.angle);
